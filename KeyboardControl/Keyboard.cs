@@ -9,6 +9,7 @@ using KeyboardControl.Structs;
 using KeyboardControl.PInvoke;
 using System.Runtime.InteropServices;
 using System;
+using KeyboardControl.Metadata;
 
 namespace KeyboardControl
 {
@@ -43,10 +44,29 @@ namespace KeyboardControl
 	/// </summary>
 	public class Keyboard : Control
 	{
-		private NumPadKeyList _numPad = new NumPadKeyList(); // пока не юзается
 		public Grid BackendGrid = new Grid();
+		public List<Key> NumPad => new NumPadKeyList().GetNumPadKeyList();
 
-		public List<Key> NumPad => _numPad.numPad; // пока не юзается
+		public static readonly DependencyProperty KeyMetadataProperty = DependencyProperty.RegisterAttached(
+		  "KeyMetadata",
+		  typeof(Key),
+		  typeof(ButtonBase)
+		  //new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender)
+		);
+
+
+		public static Key GetKeyMetadata(UIElement element)
+		{
+			return (Key)element.GetValue(KeyMetadataProperty);
+		}
+
+		public static void SetKeyMetadata(UIElement element, Key key)
+		{
+			element.SetValue(KeyMetadataProperty, key);
+		}
+
+
+
 
 		static Keyboard()
 		{
@@ -54,10 +74,12 @@ namespace KeyboardControl
 			
 		}
 
-		public Keyboard()
-		{
+		//public Keyboard()
+		//{
 
-		}
+		//}
+
+
 
 		public override void OnApplyTemplate()
 		{
@@ -80,32 +102,72 @@ namespace KeyboardControl
 				BackendGrid.ColumnDefinitions.Add(new ColumnDefinition() /*{ Width = new GridLength(30) }*/);
 			}
 
-			int k = 0;
+			//	int k = 0;
 
-			for (int i = 0; i < 4; i++)
-			{
-				for (int j = 0; j < 3; j++)
+			//	for (int i = 0; i < 4; i++)
+			//	{
+			//		for (int j = 0; j < 3; j++)
+			//		{
+
+			//			RepeatButton button = new RepeatButton
+			//			{
+			//				Name = NumPad[k].VKCode.ToString(),
+			//				Content = NumPad[k].DiplayName,
+			//				DataContext = NumPad[k].VKCode,
+			//				Width = NumPad[k].Width,
+			//				Height = NumPad[k].Height,
+			//				Focusable = false
+			//			};
+
+			//			BackendGrid.Children.Add(button);
+			//			Grid.SetRow(button, i);
+			//			Grid.SetColumn(button, j);
+			//			button.Click += this.RepeatButton_Click;
+
+			//			k++;
+			//		}
+			//	}
+
+			//}
+
+			//void GetNumPudButtons()
+			//{
+			int numPadColumn = 0;
+
+			foreach (Key key in NumPad)
+				{
+				RepeatButton button = new RepeatButton
 				{
 
-					RepeatButton button = new RepeatButton
-					{
-						Name = NumPad[k].VKCode.ToString(),
-						Content = NumPad[k].DiplayName,
-						DataContext = NumPad[k].VKCode,
-						Width = NumPad[k].Width,
-						Height = NumPad[k].Height,
-						Focusable = false
+					Name = key.VKCode.ToString(),
+					Content = key.UIName,
+					DataContext = key.VKCode,
+					Width = key.Width * key.WidthCoefficient, //TODO: Add Margin
+					Height = key.Height,
+					Focusable = false,
+					//Margin
 					};
 
+					//SetKeyMetadata(button, key);
+
 					BackendGrid.Children.Add(button);
-					Grid.SetRow(button, i);
-					Grid.SetColumn(button, j);
+					Grid.SetRow(button, key.RowPosition);
+					Grid.SetColumn(button, numPadColumn++);
 					button.Click += this.RepeatButton_Click;
 
-					k++;
-				}
-			}
 
+					if (key.UIName == "0")
+					{
+						Grid.SetColumnSpan(button, (int)key.WidthCoefficient);
+						numPadColumn++;
+					}
+
+					if (numPadColumn == 3)
+					{
+					numPadColumn = 0;
+					}
+			}
+			//}
 		}
 
 		public void RepeatButton_Click(object sender, RoutedEventArgs e)
@@ -150,6 +212,6 @@ namespace KeyboardControl
 			set { SetValue(NumPadVisibilityProperty, value); }
 		}
 
-
+		//TODO: AttachedProperty KeyboardType (full, mainpad, numpad)
 	}
 }
