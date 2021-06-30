@@ -13,72 +13,72 @@ namespace KeyboardControl.Enums
 		/// <summary>
 		/// Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '`~' key 
 		/// </summary>
-		OEM_3 = 0xC0,
+		OEM_3,
 
 		/// <summary>
 		/// Q key
 		/// </summary>
-		VK_Q = 0x51,
+		VK_Q,
 
 		/// <summary>
 		/// W key
 		/// </summary>
-		VK_W = 0x57,
+		VK_W,
 
 		/// <summary>
 		/// E key
 		/// </summary>
-		VK_E = 0x45,
+		VK_E,
 
 		/// <summary>
 		/// R key
 		/// </summary>
-		VK_R = 0x52,
+		VK_R,
 
 		/// <summary>
 		/// T key
 		/// </summary>
-		VK_T = 0x54,
+		VK_T,
 
 		/// <summary>
 		/// Y key
 		/// </summary>
-		VK_Y = 0x59,
+		VK_Y,
 
 		/// <summary>
 		/// U key
 		/// </summary>
-		VK_U = 0x55,
+		VK_U,
 
 		/// <summary>
 		/// I key
 		/// </summary>
-		VK_I = 0x49,
+		VK_I,
 
 		/// <summary>
 		/// O key
 		/// </summary>
-		VK_O = 0x4F,
+		VK_O,
 
 		/// <summary>
 		/// P key
 		/// </summary>
-		VK_P = 0x50,
+		VK_P,
 
 		/// <summary>
 		/// Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '[{' key
 		/// </summary>
-		OEM_4 = 0xDB,
+		OEM_4,
 
 		/// <summary>
 		/// Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the ']}' key
 		/// </summary>
-		OEM_6 = 0xDD,
+		OEM_6,
 
 		/// <summary>
 		/// BACKSPACE key
 		/// </summary>
-		BACK = 0x08,
+		BACK,
 
 
 		// Row 1
@@ -86,67 +86,67 @@ namespace KeyboardControl.Enums
 		/// <summary>
 		/// TAB key
 		/// </summary>
-		TAB = 0x09,
+		TAB,
 
 		/// <summary>
 		/// A key
 		/// </summary>
-		VK_A = 0x41,
+		VK_A,
 
 		/// <summary>
 		/// S key
 		/// </summary>
-		VK_S = 0x53,
+		VK_S,
 
 		/// <summary>
 		/// D key
 		/// </summary>
-		VK_D = 0x44,
+		VK_D,
 
 		/// <summary>
 		/// F key
 		/// </summary>
-		VK_F = 0x46,
+		VK_F,
 
 		/// <summary>
 		/// G key
 		/// </summary>
-		VK_G = 0x47,
+		VK_G,
 
 		/// <summary>
 		/// H key
 		/// </summary>
-		VK_H = 0x48,
+		VK_H,
 
 		/// <summary>
 		/// J key
 		/// </summary>
-		VK_J = 0x4A,
+		VK_J,
 
 		/// <summary>
 		/// K key
 		/// </summary>
-		VK_K = 0x4B,
+		VK_K,
 
 		/// <summary>
 		/// L key
 		/// </summary>
-		VK_L = 0x4C,
+		VK_L,
 
 		/// <summary>
 		/// Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the ';:' key 
 		/// </summary>
-		OEM_1 = 0xBA,
+		OEM_1,
 
 		/// <summary>
 		/// Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the 'single-quote/double-quote' key
 		/// </summary>
-		OEM_7 = 0xDE,
+		OEM_7,
 
 		/// <summary>
 		/// ENTER key
 		/// </summary>
-		RETURN = 0x0D,
+		RETURN,
 
 
 		// Row 2
@@ -154,57 +154,57 @@ namespace KeyboardControl.Enums
 		/// <summary>
 		/// Left SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
 		/// </summary>
-		LSHIFT = 0xA0,
+		LSHIFT,
 
 		/// <summary>
 		/// Z key
 		/// </summary>
-		VK_Z = 0x5A,
+		VK_Z,
 
 		/// <summary>
 		/// X key
 		/// </summary>
-		VK_X = 0x58,
+		VK_X,
 
 		/// <summary>
 		/// C key
 		/// </summary>
-		VK_C = 0x43,
+		VK_C,
 
 		/// <summary>
 		/// V key
 		/// </summary>
-		VK_V = 0x56,
+		VK_V,
 
 		/// <summary>
 		/// B key
 		/// </summary>
-		VK_B = 0x42,
+		VK_B,
 
 		/// <summary>
 		/// N key
 		/// </summary>
-		VK_N = 0x4E,
+		VK_N,
 
 		/// <summary>
 		/// M key
 		/// </summary>
-		VK_M = 0x4D,
+		VK_M,
 
 		/// <summary>
 		/// Windows 2000/XP: For any country/region, the ',' key
 		/// </summary>
-		OEM_COMMA = 0xBC,
+		OEM_COMMA,
 
 		/// <summary>
 		/// Windows 2000/XP: For any country/region, the '.' key
 		/// </summary>
-		OEM_PERIOD = 0xBE,
+		OEM_PERIOD,
 
 		/// <summary>
 		/// Used for miscellaneous characters; it can vary by keyboard. Windows 2000/XP: For the US standard keyboard, the '/?' key 
 		/// </summary>
-		OEM_2 = 0xBF,
+		OEM_2,
 
 
 		// Row 3
@@ -214,17 +214,17 @@ namespace KeyboardControl.Enums
 		/// <summary>
 		/// SPACEBAR
 		/// </summary>
-		SPACE = 0x20,
+		SPACE,
 
 		/// <summary>
 		/// LEFT ARROW key
 		/// </summary>
-		LEFT = 0x25,
+		LEFT,
 
 		/// <summary>
 		/// RIGHT ARROW key
 		/// </summary>
-		RIGHT = 0x27,
+		RIGHT,
 
 		//"LangSelector"
 	}
