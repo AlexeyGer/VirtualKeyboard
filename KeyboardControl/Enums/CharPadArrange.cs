@@ -209,7 +209,7 @@ namespace KeyboardControl.Enums
 
 		// Row 3
 
-		//"@123"
+		SYMB, //"@123"
 
 		/// <summary>
 		/// SPACEBAR

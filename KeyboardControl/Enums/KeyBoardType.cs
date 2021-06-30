@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace KeyboardControl.Enums
 {
-	public enum RowNumber
+	public enum KeyBoardType
 	{
-		Row_0,
-		Row_1 = 1,
-		Row_2 = 2,
-		Row_3 = 3
+		Full,
+		CharPad,
+		NumPad
 	}
 }

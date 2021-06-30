@@ -42,10 +42,12 @@ namespace KeyboardControl
 	///     <MyNamespace:CustomControl1/>
 	///
 	/// </summary>
-	public class Keyboard : Control
+	public class Keyboard : Control //TODO: KeyboardTypeSwitcher()
 	{
 		public Grid BackendGrid = new Grid();
 		public List<UIElement> charPadKeys = new List<UIElement>();
+		public List<UIElement> numPadKeys = new List<UIElement>();
+
 
 		public List<Key> NumPad => new NumPadKeyList().GetNumPadKeyList();
 		public List<Key> CharPad => new CharPadKeyList().GetCharPadKeyList();
@@ -53,6 +55,11 @@ namespace KeyboardControl
 		public List<UIElement> CharPadKeys
 		{
 			get { return charPadKeys; }
+		}
+
+		public List<UIElement> NumPadKeys
+		{
+			get { return numPadKeys; }
 		}
 
 
@@ -77,6 +84,25 @@ namespace KeyboardControl
 
 
 
+		public static readonly DependencyProperty KeyboardTypeProperty = DependencyProperty.RegisterAttached(
+			  "KeyboardType",
+			  typeof(KeyBoardType),
+			  typeof(TextBox)
+		);
+
+		public static KeyBoardType GetKeyboardType(DependencyObject element)
+		{
+			return (KeyBoardType)element.GetValue(KeyboardTypeProperty);
+		}
+
+		public static void SetKeyboardType(DependencyObject element, KeyBoardType type)
+		{
+			element.SetValue(KeyboardTypeProperty, type);
+		}
+
+
+
+
 		static Keyboard()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(typeof(Keyboard)));
@@ -88,6 +114,29 @@ namespace KeyboardControl
 
 		//}
 
+		public void KeyboardTypeSwitcher(KeyBoardType KeyboardTypeProperty)
+		{
+			var Charpad = GetTemplateChild("Charpad") as ItemsControl;
+			var Numpad = GetTemplateChild("Numpad") as ItemsControl;
+
+			if (KeyboardTypeProperty == KeyBoardType.Full)
+			{
+				Charpad.Visibility = Visibility.Visible;
+				Numpad.Visibility = Visibility.Visible;
+			}
+
+			if (KeyboardTypeProperty == KeyBoardType.CharPad)
+			{
+				Charpad.Visibility = Visibility.Visible;
+				Numpad.Visibility = Visibility.Collapsed;
+			}
+
+			if (KeyboardTypeProperty == KeyBoardType.NumPad)
+			{
+				Charpad.Visibility = Visibility.Collapsed;
+				Numpad.Visibility = Visibility.Visible;
+			}
+		}
 
 
 		public override void OnApplyTemplate()
@@ -95,6 +144,7 @@ namespace KeyboardControl
 			BackendGrid = GetTemplateChild("NumPadGrid") as Grid;
 			//GridGenerate();
 			GetCharPadList();
+			GetNumPadList();
 		}
 
 		public void GetCharPadList()
@@ -112,6 +162,25 @@ namespace KeyboardControl
 
 				SetKeyMetadata(button, key);
 				CharPadKeys.Add(button);
+				button.Click += this.RepeatButton_Click;
+			}
+		}
+
+		public void GetNumPadList()
+		{
+			foreach (Key key in NumPad)
+			{
+				RepeatButton button = new RepeatButton
+				{
+					Name = key.VKCode.ToString(),
+					Content = key.UIName,
+					DataContext = key,
+
+					Focusable = false
+				};
+
+				SetKeyMetadata(button, key);
+				NumPadKeys.Add(button);
 				button.Click += this.RepeatButton_Click;
 			}
 		}

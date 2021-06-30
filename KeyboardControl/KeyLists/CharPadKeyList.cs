@@ -12,6 +12,8 @@ namespace KeyboardControl.KeyLists
 	class CharPadKeyList
 	{
 		public List<Key> charPad = new List<Key>();
+		//public List<UIElement> charPadKeys = new List<UIElement>();
+
 
 		string enumKeyName;
 		VirtualKeyCode keyCodeValue;
@@ -42,16 +44,35 @@ namespace KeyboardControl.KeyLists
 				enumKeyName = Enum.GetName(typeof(CharPadArrange), i);
 				keyCodeValue = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), enumKeyName);
 
-				//if ((int)i == (int)CharPadArrange.NUMPAD0)
-				//{
-				//	widthCoefficient = 2;
-				//}
+				if ((int)i == (int)CharPadArrange.BACK)
+				{
+					widthCoefficient = 2;
+				}
+
+				if ((int)i == (int)CharPadArrange.RETURN)
+				{
+					widthCoefficient = 3;
+				}
+
+				if ((int)i == (int)CharPadArrange.SPACE)
+				{
+					widthCoefficient = 6;
+				}
+
+				if ((int)i == (int)CharPadArrange.BACK)
+				{
+					widthCoefficient = 2;
+				}
 
 				charPad.Add(new Key(ToUnicodeConverter.GetKeyUIName(keyCodeValue), keyCodeValue, rowPosition, widthCoefficient));
 				widthCoefficient = 1;
+
+
 			}
 
 			return charPad;
 		}
+
+
 	}
 }

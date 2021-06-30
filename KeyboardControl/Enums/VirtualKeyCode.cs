@@ -932,5 +932,7 @@
         /// Clear key
         /// </summary>
         OEM_CLEAR = 0xFE,
+
+        SYMB
     }
 }

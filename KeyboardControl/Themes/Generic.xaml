@@ -2,8 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:KeyboardControl"
-	xmlns:panel="clr-namespace:KeyboardControl.Panels">
-	
+	xmlns:panel="clr-namespace:KeyboardControl.Panels"
+	xmlns:keys="clr-namespace:KeyboardControl.KeyLists">
+
+
 	<Style TargetType="{x:Type local:Keyboard}">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -12,14 +14,29 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
 
-						<ItemsControl ItemsSource="{Binding CharPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
+						<Grid>
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="3*"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							
+							<ItemsControl Name="CharPad" Grid.Column="0" Margin ="10,10,10,10" ItemsSource="{Binding CharPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 										<panel:KeyboardPanel />
 								</ItemsPanelTemplate>
 							</ItemsControl.ItemsPanel>
-						</ItemsControl>
+							</ItemsControl>
 
+							<ItemsControl Name="NumPad" Grid.Column="1" Margin ="10,10,10,10" ItemsSource="{Binding NumPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<panel:KeyboardPanel />
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+						</ItemsControl>
+						</Grid>
 						<!--<Grid Name="NumPadGrid"/>-->
 						
 					</Border>
