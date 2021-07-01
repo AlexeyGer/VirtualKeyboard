@@ -22,13 +22,6 @@ namespace KeyboardControl.Panels
 		List<UIElement> thirdRowElements = new List<UIElement>();
 		List<UIElement> fourthRowElements = new List<UIElement>();
 
-		//	public KeyboardPanel()
-		//		{
-		//				GetRowsElements();
-
-		//}
-
-
 
 		//public double KeyMargin
 		//{
@@ -47,7 +40,7 @@ namespace KeyboardControl.Panels
 		{
 			if (firstRowElements.Count == 0)
 			{
-				foreach (ButtonBase child in this.Children)
+				foreach (FrameworkElement child in this.Children)
 				{
 					int row = Keyboard.GetKeyMetadata(child).RowPosition;
 
@@ -80,9 +73,6 @@ namespace KeyboardControl.Panels
 				widthSum += keyWidth * Keyboard.GetKeyMetadata(targertRowElements[i]).WidthCoefficient /*+ KeyMargin * 2*/;
 			}
 
-			//widthSum = (double)rowWidth / 13 * (targertRowElements.Count - 1);
-
-
 			availableWidthForFistElement = rowWidth - widthSum;
 
 			return availableWidthForFistElement;
@@ -112,7 +102,7 @@ namespace KeyboardControl.Panels
 
 
 
-			foreach (ButtonBase child in this.Children)
+			foreach (FrameworkElement child in this.Children)
 			{
 				double  Proportion = (double)Keyboard.GetKeyMetadata(child).WidthCoefficient /*+ KeyMargin * 2*/;
 
@@ -167,7 +157,7 @@ namespace KeyboardControl.Panels
 			double currentX = 0;
 			double currentY = 0;
 
-			foreach (ButtonBase child in this.Children)
+			foreach (FrameworkElement child in this.Children)
 			{
 				cellHeight = rowHeight;
 				cellWidth = (double)child.Width /*+ KeyMargin * 2*/;

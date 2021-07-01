@@ -11,14 +11,14 @@ namespace KeyboardControl.KeyLists
 {
 	public class NumPadKeyList
 	{
-		public List<Key> numPad = new List<Key>();
+		public List<KeyData> numPad = new List<KeyData>();
 
 		string enumKeyName;
 		VirtualKeyCode keyCodeValue;
 		public int rowPosition;
 		double widthCoefficient = 1;
 
-		public List<Key> GetNumPadKeyList()
+		public List<KeyData> GetNumPadKeyList()
 		{
 			foreach (NumPadArrange i in Enum.GetValues(typeof(NumPadArrange)))
 			{
@@ -47,7 +47,7 @@ namespace KeyboardControl.KeyLists
 					widthCoefficient = 2;
 				}
 
-				numPad.Add(new Key(ToUnicodeConverter.GetKeyUIName(keyCodeValue), keyCodeValue, rowPosition, widthCoefficient));
+				numPad.Add(new KeyData(ToUnicodeConverter.GetKeyUIName(keyCodeValue), keyCodeValue, rowPosition, widthCoefficient));
 				widthCoefficient = 1;
 			}
 

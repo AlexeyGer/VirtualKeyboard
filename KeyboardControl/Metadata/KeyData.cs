@@ -10,7 +10,7 @@ using KeyboardControl.Enums;
 
 namespace KeyboardControl.Metadata
 {
-	public class Key : INotifyPropertyChanged
+	public class KeyData : INotifyPropertyChanged
 	{
 		private string _UIName;
 		private VirtualKeyCode _vkcode;
@@ -114,7 +114,7 @@ namespace KeyboardControl.Metadata
 		//	WidthCoefficient = widthCoefficient;
 		//}
 
-		public Key(string name, VirtualKeyCode vkcode, int rowPosition, double widthCoefficient = 1)
+		public KeyData(string name, VirtualKeyCode vkcode, int rowPosition, double widthCoefficient = 1)
 		{
 			UIName = name;
 			VKCode = vkcode;

@@ -10,6 +10,7 @@ using KeyboardControl.PInvoke;
 using System.Runtime.InteropServices;
 using System;
 using KeyboardControl.Metadata;
+using System.Windows.Input;
 
 namespace KeyboardControl
 {
@@ -44,13 +45,16 @@ namespace KeyboardControl
 	/// </summary>
 	public class Keyboard : Control //TODO: KeyboardTypeSwitcher()
 	{
-		public Grid BackendGrid = new Grid();
+		//public Grid BackendGrid = new Grid();
 		public List<UIElement> charPadKeys = new List<UIElement>();
 		public List<UIElement> numPadKeys = new List<UIElement>();
 
+		public ItemsControl CharPadType;
+		public ItemsControl NumPadType;
 
-		public List<Key> NumPad => new NumPadKeyList().GetNumPadKeyList();
-		public List<Key> CharPad => new CharPadKeyList().GetCharPadKeyList();
+
+		public List<KeyData> NumPad => new NumPadKeyList().GetNumPadKeyList();
+		public List<KeyData> CharPad => new CharPadKeyList().GetCharPadKeyList();
 
 		public List<UIElement> CharPadKeys
 		{
@@ -64,21 +68,20 @@ namespace KeyboardControl
 
 
 		public static readonly DependencyProperty KeyMetadataProperty = DependencyProperty.RegisterAttached(
-		  "KeyMetadata",
-		  typeof(Key),
-		  typeof(ButtonBase)
-		  //new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender)
+			  "KeyMetadata",
+			  typeof(KeyData),
+			  typeof(ButtonBase)
 		);
 
 
-		public static Key GetKeyMetadata(UIElement element)
+		public static KeyData GetKeyMetadata(UIElement element)
 		{
-			return (Key)element.GetValue(KeyMetadataProperty);
+			return (KeyData)element.GetValue(KeyMetadataProperty);
 		}
 
-		public static void SetKeyMetadata(UIElement element, Key key)
+		public static void SetKeyMetadata(UIElement element, KeyData keyData)
 		{
-			element.SetValue(KeyMetadataProperty, key);
+			element.SetValue(KeyMetadataProperty, keyData);
 		}
 
 
@@ -101,66 +104,78 @@ namespace KeyboardControl
 		}
 
 
+		internal void GetFocus(object sender, RoutedEventArgs e)
+		{
+			if (sender is TextBox)
+			{
+				var type = GetKeyboardType(sender as DependencyObject);
+				KeyboardTypeSwitcher(type);
+			}
+
+		}
+
 
 
 		static Keyboard()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(typeof(Keyboard)));
-			
 		}
 
-		//public Keyboard()
-		//{
-
-		//}
+		public Keyboard()
+		{
+			EventManager.RegisterClassHandler(
+					typeof(UIElement),
+					GotKeyboardFocusEvent,
+					new RoutedEventHandler(GetFocus)
+			);
+		}
 
 		public void KeyboardTypeSwitcher(KeyBoardType KeyboardTypeProperty)
 		{
-			var Charpad = GetTemplateChild("Charpad") as ItemsControl;
-			var Numpad = GetTemplateChild("Numpad") as ItemsControl;
-
 			if (KeyboardTypeProperty == KeyBoardType.Full)
 			{
-				Charpad.Visibility = Visibility.Visible;
-				Numpad.Visibility = Visibility.Visible;
+				CharPadType.Visibility = Visibility.Visible;
+				NumPadType.Visibility = Visibility.Visible;
 			}
 
 			if (KeyboardTypeProperty == KeyBoardType.CharPad)
 			{
-				Charpad.Visibility = Visibility.Visible;
-				Numpad.Visibility = Visibility.Collapsed;
+				CharPadType.Visibility = Visibility.Visible;
+				NumPadType.Visibility = Visibility.Collapsed;
 			}
 
 			if (KeyboardTypeProperty == KeyBoardType.NumPad)
 			{
-				Charpad.Visibility = Visibility.Collapsed;
-				Numpad.Visibility = Visibility.Visible;
+				CharPadType.Visibility = Visibility.Collapsed;
+				NumPadType.Visibility = Visibility.Visible;
 			}
 		}
 
 
 		public override void OnApplyTemplate()
 		{
-			BackendGrid = GetTemplateChild("NumPadGrid") as Grid;
+			//BackendGrid = GetTemplateChild("NumPadGrid") as Grid;
 			//GridGenerate();
 			GetCharPadList();
 			GetNumPadList();
+			CharPadType = GetTemplateChild("CharPadLayout") as ItemsControl;
+			NumPadType = GetTemplateChild("NumPadLayout") as ItemsControl;
 		}
 
 		public void GetCharPadList()
 		{
-			foreach (Key key in CharPad)
+			foreach (KeyData keyData in CharPad)
 			{
 				RepeatButton button = new RepeatButton
 				{
-					Name = key.VKCode.ToString(),
-					Content = key.UIName,
-					DataContext = key,
+					Name = keyData.VKCode.ToString(),
+					Content = keyData.UIName,
+					DataContext = keyData,
 
 					Focusable = false
 				};
 
-				SetKeyMetadata(button, key);
+				SetKeyMetadata(button, keyData);
 				CharPadKeys.Add(button);
 				button.Click += this.RepeatButton_Click;
 			}
@@ -168,18 +183,18 @@ namespace KeyboardControl
 
 		public void GetNumPadList()
 		{
-			foreach (Key key in NumPad)
+			foreach (KeyData keyData in NumPad)
 			{
 				RepeatButton button = new RepeatButton
 				{
-					Name = key.VKCode.ToString(),
-					Content = key.UIName,
-					DataContext = key,
+					Name = keyData.VKCode.ToString(),
+					Content = keyData.UIName,
+					DataContext = keyData,
 
 					Focusable = false
 				};
 
-				SetKeyMetadata(button, key);
+				SetKeyMetadata(button, keyData);
 				NumPadKeys.Add(button);
 				button.Click += this.RepeatButton_Click;
 			}
@@ -276,45 +291,12 @@ namespace KeyboardControl
 			RepeatButton button = sender as RepeatButton;
 			INPUT[] Inputs = new INPUT[1];
 			INPUT Input = new INPUT();
-			Input.Type = (int)InputType.Keyboard;
+			Input.Type = (int)Enums.InputType.Keyboard;
 			//Input.Data.Keyboard.KeyCode = (ushort)(VirtualKeyCode)button.DataContext;
 			Input.Data.Keyboard.KeyCode = (ushort)(VirtualKeyCode)Keyboard.GetKeyMetadata(button).VKCode;
 
 			Inputs[0] = Input;
 			PInvokeMethods.SendInput(Input.Type, Inputs, Marshal.SizeOf(typeof(INPUT)));
 		}
-
-		public static readonly DependencyProperty ContentProperty =
-		DependencyProperty.Register(nameof(Content), typeof(Visibility), typeof(Keyboard),
-		new PropertyMetadata(default(Visibility)));
-
-		public Visibility Content
-		{
-			get { return (Visibility)GetValue(ContentProperty); }
-			set { SetValue(ContentProperty, value); }
-		}
-
-
-		public static readonly DependencyProperty KeyPadVisibilityProperty =
-				DependencyProperty.Register(nameof(KeyPadVisibility), typeof(Visibility), typeof(Keyboard),
-				new PropertyMetadata(default(Visibility)));
-
-		public Visibility KeyPadVisibility
-		{
-			get { return (Visibility)GetValue(KeyPadVisibilityProperty); }
-			set { SetValue(KeyPadVisibilityProperty, value); }
-		}
-
-		public static readonly DependencyProperty NumPadVisibilityProperty =
-				DependencyProperty.Register(nameof(NumPadVisibility), typeof(Visibility), typeof(Keyboard),
-				new PropertyMetadata(default(Visibility)));
-
-		public Visibility NumPadVisibility
-		{
-			get { return (Visibility)GetValue(NumPadVisibilityProperty); }
-			set { SetValue(NumPadVisibilityProperty, value); }
-		}
-
-		//TODO: AttachedProperty KeyboardType (full, mainpad, numpad)
 	}
 }

@@ -11,7 +11,7 @@ namespace KeyboardControl.KeyLists
 {
 	class CharPadKeyList
 	{
-		public List<Key> charPad = new List<Key>();
+		public List<KeyData> charPad = new List<KeyData>();
 		//public List<UIElement> charPadKeys = new List<UIElement>();
 
 
@@ -20,7 +20,7 @@ namespace KeyboardControl.KeyLists
 		public int rowPosition;
 		double widthCoefficient = 1;
 
-		public List<Key> GetCharPadKeyList()
+		public List<KeyData> GetCharPadKeyList()
 		{
 			foreach (CharPadArrange i in Enum.GetValues(typeof(CharPadArrange)))
 			{
@@ -64,7 +64,7 @@ namespace KeyboardControl.KeyLists
 					widthCoefficient = 2;
 				}
 
-				charPad.Add(new Key(ToUnicodeConverter.GetKeyUIName(keyCodeValue), keyCodeValue, rowPosition, widthCoefficient));
+				charPad.Add(new KeyData(ToUnicodeConverter.GetKeyUIName(keyCodeValue), keyCodeValue, rowPosition, widthCoefficient));
 				widthCoefficient = 1;
 
 

@@ -7,9 +7,57 @@
 		xmlns:layout="clr-namespace:KeyboardControl;assembly=KeyboardControl"
 
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-		<TextBox HorizontalAlignment="Center" Margin="0,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-		<layout:Keyboard HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        Title="MainWindow" Height="500" Width="800">
+    <Grid Background="LightBlue">
+		<TextBlock Text="DELIVERY FORM"
+				   FontWeight="Bold" 
+				   FontSize="20" 
+				   HorizontalAlignment="Center" 
+				   Margin="0,20,0,0" 
+				   TextWrapping="Wrap" 
+				   VerticalAlignment="Top" />
+
+		<TextBlock Text="Full Name:" 
+				   FontSize="14" 
+				   HorizontalAlignment="Center" 
+				   Margin="0,60,0,0" 
+				   TextWrapping="Wrap" 
+				   VerticalAlignment="Top" />
+		<TextBox layout:Keyboard.KeyboardType="CharPad" 
+				 HorizontalAlignment="Center" 
+				 Margin="0,80,0,0" 
+				 TextWrapping="Wrap" 
+				 VerticalAlignment="Top" 
+				 Width="120"/>
+
+		<TextBlock Text="Address:" 
+				   FontSize="14" 
+				   HorizontalAlignment="Center" 
+				   Margin="0,110,0,0" 
+				   TextWrapping="Wrap" 
+				   VerticalAlignment="Top" />
+		<TextBox layout:Keyboard.KeyboardType="Full" 
+				 HorizontalAlignment="Center" 
+				 Margin="0,130,0,0" 
+				 TextWrapping="Wrap" 
+				 VerticalAlignment="Top" 
+				 Width="120"/>
+
+		<TextBlock Text="Zip Code:"  
+				   FontSize="14" 
+				   HorizontalAlignment="Center" 
+				   Margin="0,160,0,0" 
+				   TextWrapping="Wrap" 
+				   VerticalAlignment="Top" />
+		<TextBox layout:Keyboard.KeyboardType="NumPad" 
+				 HorizontalAlignment="Center" 
+				 Margin="0,180,0,0" 
+				 TextWrapping="Wrap" 
+				 VerticalAlignment="Top" 
+				 Width="120"/>
+		
+		<layout:Keyboard HorizontalAlignment="Center" 
+						 VerticalAlignment="Bottom"
+						 FontSize="20"/>
 	</Grid>
 </Window>
