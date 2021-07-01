@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System;
 using KeyboardControl.Metadata;
 using System.Windows.Input;
+using KeyboardControl.Utils;
 
 namespace KeyboardControl
 {
@@ -55,6 +56,8 @@ namespace KeyboardControl
 
 		public List<KeyData> NumPad => new NumPadKeyList().GetNumPadKeyList();
 		public List<KeyData> CharPad => new CharPadKeyList().GetCharPadKeyList();
+
+		KeyBoardType keyboardType;
 
 		public List<UIElement> CharPadKeys
 		{
@@ -106,15 +109,16 @@ namespace KeyboardControl
 
 		internal void GetFocus(object sender, RoutedEventArgs e)
 		{
+
 			if (sender is TextBox)
 			{
-				var type = GetKeyboardType(sender as DependencyObject);
-				KeyboardTypeSwitcher(type);
+				keyboardType = GetKeyboardType(sender as DependencyObject);
 			}
 
+			KeyboardTypeSwitcher(keyboardType);
 		}
 
-
+		
 
 		static Keyboard()
 		{
@@ -128,6 +132,8 @@ namespace KeyboardControl
 					GotKeyboardFocusEvent,
 					new RoutedEventHandler(GetFocus)
 			);
+
+			Application.Current.Exit += OnExit;
 		}
 
 		public void KeyboardTypeSwitcher(KeyBoardType KeyboardTypeProperty)
@@ -166,18 +172,40 @@ namespace KeyboardControl
 		{
 			foreach (KeyData keyData in CharPad)
 			{
-				RepeatButton button = new RepeatButton
+				if (keyData.VKCode == VirtualKeyCode.LSHIFT)
 				{
-					Name = keyData.VKCode.ToString(),
-					Content = keyData.UIName,
-					DataContext = keyData,
+					ToggleButton button = new ToggleButton
+					{
+						Name = keyData.VKCode.ToString(),
+						Content = keyData.UIName,
+						DataContext = keyData,
 
-					Focusable = false
-				};
+						Focusable = false
+					};
 
-				SetKeyMetadata(button, keyData);
-				CharPadKeys.Add(button);
-				button.Click += this.RepeatButton_Click;
+					SetKeyMetadata(button, keyData);
+					CharPadKeys.Add(button);
+					//button.Click += this.Shift_Click;
+					button.Checked += ShiftChecked;
+					button.Unchecked += ShiftUnchecked;
+				}
+
+				else
+				{
+					RepeatButton button = new RepeatButton
+					{
+						Name = keyData.VKCode.ToString(),
+						Content = keyData.UIName,
+						DataContext = keyData,
+
+						Focusable = false
+					};
+
+					SetKeyMetadata(button, keyData);
+					CharPadKeys.Add(button);
+					button.Click += this.RepeatButton_Click;
+				}
+
 			}
 		}
 
@@ -201,91 +229,6 @@ namespace KeyboardControl
 		}
 
 
-
-
-		//public void GridGenerate()
-		//{
-		//	BackendGrid.HorizontalAlignment = HorizontalAlignment.Center;
-		//	BackendGrid.VerticalAlignment = VerticalAlignment.Bottom;
-
-		//	for (int i = 0; i < 4; i++)
-		//	{
-		//		BackendGrid.RowDefinitions.Add(new RowDefinition() /*{ Height = new GridLength(30) }*/);
-		//	}
-
-		//	for (int j = 0; j < 3; j++)
-		//	{
-		//		BackendGrid.ColumnDefinitions.Add(new ColumnDefinition() /*{ Width = new GridLength(30) }*/);
-		//	}
-
-		//	//	int k = 0;
-
-		//	//	for (int i = 0; i < 4; i++)
-		//	//	{
-		//	//		for (int j = 0; j < 3; j++)
-		//	//		{
-
-		//	//			RepeatButton button = new RepeatButton
-		//	//			{
-		//	//				Name = NumPad[k].VKCode.ToString(),
-		//	//				Content = NumPad[k].DiplayName,
-		//	//				DataContext = NumPad[k].VKCode,
-		//	//				Width = NumPad[k].Width,
-		//	//				Height = NumPad[k].Height,
-		//	//				Focusable = false
-		//	//			};
-
-		//	//			BackendGrid.Children.Add(button);
-		//	//			Grid.SetRow(button, i);
-		//	//			Grid.SetColumn(button, j);
-		//	//			button.Click += this.RepeatButton_Click;
-
-		//	//			k++;
-		//	//		}
-		//	//	}
-
-		//	//}
-
-		//	//void GetNumPudButtons()
-		//	//{
-		//	int numPadColumn = 0;
-
-		//	foreach (Key key in NumPad)
-		//		{
-		//		RepeatButton button = new RepeatButton
-		//		{
-
-		//			Name = key.VKCode.ToString(),
-		//			Content = key.UIName,
-		//			DataContext = key.VKCode,
-		//			Width = key.Width * key.WidthCoefficient, //TODO: Add Margin
-		//			Height = key.Height,
-		//			Focusable = false,
-		//			//Margin
-		//			};
-
-		//			//SetKeyMetadata(button, key);
-
-		//			BackendGrid.Children.Add(button);
-		//			Grid.SetRow(button, key.RowPosition);
-		//			Grid.SetColumn(button, numPadColumn++);
-		//			button.Click += this.RepeatButton_Click;
-
-
-		//			if (key.UIName == "0")
-		//			{
-		//				Grid.SetColumnSpan(button, (int)key.WidthCoefficient);
-		//				numPadColumn++;
-		//			}
-
-		//			if (numPadColumn == 3)
-		//			{
-		//			numPadColumn = 0;
-		//			}
-		//	}
-		//	//}
-		//}
-
 		public void RepeatButton_Click(object sender, RoutedEventArgs e)
 		{
 			RepeatButton button = sender as RepeatButton;
@@ -297,6 +240,97 @@ namespace KeyboardControl
 
 			Inputs[0] = Input;
 			PInvokeMethods.SendInput(Input.Type, Inputs, Marshal.SizeOf(typeof(INPUT)));
+		}
+
+
+		private void ShiftChecked (object sender, RoutedEventArgs e)
+		{
+			ToggleButton button = sender as ToggleButton;
+			INPUT[] Inputs = new INPUT[1];
+			INPUT Input = new INPUT();
+			Input.Type = (int)Enums.InputType.Keyboard;
+			Input.Data.Keyboard.KeyCode = (ushort)(VirtualKeyCode)Keyboard.GetKeyMetadata(button).VKCode;
+			Inputs[0] = Input;
+			PInvokeMethods.SendInput(Input.Type, Inputs, Marshal.SizeOf(typeof(INPUT)));
+
+			foreach (var key in charPadKeys)
+			{
+				ButtonBase but = key as ButtonBase;
+				//but.Content = Keyboard.GetKeyMetadata(key).VKCode.ToString().ToUpper();
+				////but.Content = ToUnicodeConverter.GetKeyUIName(Keyboard.GetKeyMetadata(key).VKCode).ToUpper();
+				//but.Content = ToUnicodeConverter.GetKeyUIName((VirtualKeyCode)but.Name.To).ToUpper();
+
+				switch (but.Content)
+				{
+					case "BS":
+					case "TAB":
+					case "ENTER":
+					case "SHIFT":
+					case "EN":
+					case "@123":
+					case "<":
+					case ">":
+						break;
+					default:
+						but.Content = but.Content.ToString().ToUpperInvariant();
+						break;
+				}
+			}
+
+			//InvalidateVisual();
+		}
+
+		private void ShiftUnchecked(object sender, RoutedEventArgs e)
+		{
+			ToggleButton button = sender as ToggleButton;
+			INPUT[] Inputs = new INPUT[1];
+			INPUT Input = new INPUT();
+			Input.Type = (int)Enums.InputType.Keyboard;
+			Input.Data.Keyboard.KeyCode = (ushort)(VirtualKeyCode)Keyboard.GetKeyMetadata(button).VKCode;
+			Input.Data.Keyboard.Flags = (uint)KeyboardFlag.KeyUp;
+			Inputs[0] = Input;
+			PInvokeMethods.SendInput(Input.Type, Inputs, Marshal.SizeOf(typeof(INPUT)));
+
+			foreach (var key in charPadKeys)
+			{
+				ButtonBase but = key as ButtonBase;
+
+				//ButtonBase but = key as ButtonBase;
+				//but.Content = but.Content.ToString().ToUpper();
+				switch (but.Content)
+				{
+					case "BS":
+					case "TAB":
+					case "ENTER":
+					case "SHIFT":
+					case "EN":
+					case "@123":
+					case "<":
+					case ">":
+						break;
+					default:
+						but.Content = but.Content.ToString().ToLowerInvariant();
+						break;
+				}
+			}
+		}
+
+		public virtual void OnExit(object sender, ExitEventArgs args)
+		{
+			//byte[] buffer = new byte[255];
+			short state = PInvokeMethods.GetAsyncKeyState((ushort)VirtualKeyCode.LSHIFT);
+
+			if (state != 0)
+			{
+				ToggleButton button = sender as ToggleButton;
+				INPUT[] Inputs = new INPUT[1];
+				INPUT Input = new INPUT();
+				Input.Type = (int)Enums.InputType.Keyboard;
+				Input.Data.Keyboard.KeyCode = (ushort)VirtualKeyCode.LSHIFT;
+				Input.Data.Keyboard.Flags = (uint)KeyboardFlag.KeyUp;
+				Inputs[0] = Input;
+				PInvokeMethods.SendInput(Input.Type, Inputs, Marshal.SizeOf(typeof(INPUT)));
+			}
 		}
 	}
 }

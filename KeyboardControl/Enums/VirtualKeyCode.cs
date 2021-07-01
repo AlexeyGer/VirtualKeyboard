@@ -933,6 +933,8 @@
         /// </summary>
         OEM_CLEAR = 0xFE,
 
-        SYMB
+        SYMB,
+
+        EN
     }
 }

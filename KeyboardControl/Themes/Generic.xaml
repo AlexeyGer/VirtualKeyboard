@@ -21,7 +21,7 @@
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
 							
-							<ItemsControl Name="CharPadLayout" Visibility="Visible" Grid.Column="0" Margin ="10,10,10,10" ItemsSource="{Binding CharPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
+							<ItemsControl Focusable="False" Name="CharPadLayout" Visibility="Visible" Grid.Column="0" Margin ="10,10,10,10" ItemsSource="{Binding CharPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 										<panel:KeyboardPanel />
@@ -29,7 +29,7 @@
 							</ItemsControl.ItemsPanel>
 							</ItemsControl>
 
-							<ItemsControl Name="NumPadLayout" Visibility="Visible" Grid.Column="1" Margin ="10,10,10,10" ItemsSource="{Binding NumPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
+							<ItemsControl Focusable="False" Name="NumPadLayout" Visibility="Visible" Grid.Column="1" Margin ="10,10,10,10" ItemsSource="{Binding NumPadKeys, RelativeSource={RelativeSource AncestorType=local:Keyboard}}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 									<panel:KeyboardPanel />

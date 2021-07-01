@@ -29,7 +29,7 @@ namespace KeyboardControl.Metadata
 			set
 			{
 				_UIName = value;
-				OnPropertyChanged(nameof(_UIName));
+				NotifyPropertyChanged();
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace KeyboardControl.Metadata
 			set
 			{
 				_margin = value;
-				OnPropertyChanged(nameof(_margin));
+				NotifyPropertyChanged();
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace KeyboardControl.Metadata
 			set
 			{
 				_widthCoefficient = value;
-				OnPropertyChanged(nameof(_widthCoefficient));
+				NotifyPropertyChanged();
 			}
 		}
 
@@ -124,12 +124,9 @@ namespace KeyboardControl.Metadata
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		private void OnPropertyChanged([CallerMemberName] String propertyName = "")
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

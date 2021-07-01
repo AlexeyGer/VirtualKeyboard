@@ -206,6 +206,8 @@ namespace KeyboardControl.Enums
 		/// </summary>
 		OEM_2,
 
+		EN,
+
 
 		// Row 3
 

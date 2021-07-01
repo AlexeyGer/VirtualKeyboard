@@ -14,16 +14,17 @@ namespace KeyboardControl.KeyLists
 		public List<KeyData> charPad = new List<KeyData>();
 		//public List<UIElement> charPadKeys = new List<UIElement>();
 
-
 		string enumKeyName;
 		VirtualKeyCode keyCodeValue;
 		public int rowPosition;
-		double widthCoefficient = 1;
+
 
 		public List<KeyData> GetCharPadKeyList()
 		{
 			foreach (CharPadArrange i in Enum.GetValues(typeof(CharPadArrange)))
 			{
+				double widthCoefficient = 1;
+
 				if ((int)i <= (int)CharPadArrange.BACK)
 				{
 					rowPosition = 0;
@@ -32,7 +33,7 @@ namespace KeyboardControl.KeyLists
 				{
 					rowPosition = 1;
 				}
-				else if ((int)i <= (int)CharPadArrange.OEM_2)
+				else if ((int)i <= (int)CharPadArrange.EN)
 				{
 					rowPosition = 2;
 				}
@@ -43,29 +44,45 @@ namespace KeyboardControl.KeyLists
 
 				enumKeyName = Enum.GetName(typeof(CharPadArrange), i);
 				keyCodeValue = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), enumKeyName);
+				string name = ToUnicodeConverter.GetKeyUIName(keyCodeValue);
 
-				if ((int)i == (int)CharPadArrange.BACK)
+				switch (i)
 				{
-					widthCoefficient = 2;
+					case CharPadArrange.BACK:
+						widthCoefficient = 3;
+						name = "BS";
+						break;
+					case CharPadArrange.TAB:
+						name = "TAB";
+						break;
+					case CharPadArrange.RETURN:
+						widthCoefficient = 3;
+						name = "ENTER";
+						break;
+					case CharPadArrange.LSHIFT:
+						name = "SHIFT";
+						break;
+					case CharPadArrange.EN:
+						widthCoefficient = 2;
+						name = "EN";
+						break;
+					case CharPadArrange.SYMB:
+						name = "@123";
+						break;
+					case CharPadArrange.SPACE:
+						widthCoefficient = 10;
+						break;
+					case CharPadArrange.LEFT:
+						widthCoefficient = 2;
+						name = "<";
+						break;
+					case CharPadArrange.RIGHT:
+						widthCoefficient = 2;
+						name = ">";
+						break;
 				}
-
-				if ((int)i == (int)CharPadArrange.RETURN)
-				{
-					widthCoefficient = 3;
-				}
-
-				if ((int)i == (int)CharPadArrange.SPACE)
-				{
-					widthCoefficient = 6;
-				}
-
-				if ((int)i == (int)CharPadArrange.BACK)
-				{
-					widthCoefficient = 2;
-				}
-
-				charPad.Add(new KeyData(ToUnicodeConverter.GetKeyUIName(keyCodeValue), keyCodeValue, rowPosition, widthCoefficient));
-				widthCoefficient = 1;
+				charPad.Add(new KeyData(name, keyCodeValue, rowPosition, widthCoefficient));
+				//widthCoefficient = 1;
 
 
 			}
