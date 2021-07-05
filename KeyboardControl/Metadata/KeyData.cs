@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
 using KeyboardControl.Enums;
 
 namespace KeyboardControl.Metadata
@@ -106,13 +101,6 @@ namespace KeyboardControl.Metadata
 				NotifyPropertyChanged();
 			}
 		}
-
-		//public Key(VirtualKeyCode vkcode, int widthCoefficient = 1)
-		//{
-		//	UIName = Convert.ToChar(vkcode).ToString();
-		//	VKCode = vkcode;
-		//	WidthCoefficient = widthCoefficient;
-		//}
 
 		public KeyData(string name, VirtualKeyCode vkcode, int rowPosition, double widthCoefficient = 1)
 		{

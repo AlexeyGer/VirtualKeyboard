@@ -8,7 +8,6 @@ using KeyboardControl.Enums;
 using KeyboardControl.Structs;
 using KeyboardControl.PInvoke;
 using System.Runtime.InteropServices;
-using System;
 using KeyboardControl.Metadata;
 using System.Windows.Input;
 using KeyboardControl.Utils;
@@ -44,38 +43,27 @@ namespace KeyboardControl
 	///     <MyNamespace:CustomControl1/>
 	///
 	/// </summary>
-	public class Keyboard : Control //TODO: KeyboardTypeSwitcher()
+	public class Keyboard : Control //TODO: Language Switcher
 	{
-		//public Grid BackendGrid = new Grid();
 		public List<UIElement> charPadKeys = new List<UIElement>();
 		public List<UIElement> numPadKeys = new List<UIElement>();
 
 		public ItemsControl CharPadType;
 		public ItemsControl NumPadType;
 
+		KeyBoardType keyboardType;
 
 		public List<KeyData> NumPad => new NumPadKeyList().GetNumPadKeyList();
 		public List<KeyData> CharPad => new CharPadKeyList().GetCharPadKeyList();
 
-		KeyBoardType keyboardType;
-
-		public List<UIElement> CharPadKeys
-		{
-			get { return charPadKeys; }
-		}
-
-		public List<UIElement> NumPadKeys
-		{
-			get { return numPadKeys; }
-		}
-
+		public List<UIElement> CharPadKeys => charPadKeys;
+		public List<UIElement> NumPadKeys => numPadKeys;
 
 		public static readonly DependencyProperty KeyMetadataProperty = DependencyProperty.RegisterAttached(
 			  "KeyMetadata",
 			  typeof(KeyData),
 			  typeof(ButtonBase)
 		);
-
 
 		public static KeyData GetKeyMetadata(UIElement element)
 		{
@@ -86,9 +74,6 @@ namespace KeyboardControl
 		{
 			element.SetValue(KeyMetadataProperty, keyData);
 		}
-
-
-
 
 		public static readonly DependencyProperty KeyboardTypeProperty = DependencyProperty.RegisterAttached(
 			  "KeyboardType",
@@ -106,20 +91,6 @@ namespace KeyboardControl
 			element.SetValue(KeyboardTypeProperty, type);
 		}
 
-
-		internal void GetFocus(object sender, RoutedEventArgs e)
-		{
-
-			if (sender is TextBox)
-			{
-				keyboardType = GetKeyboardType(sender as DependencyObject);
-			}
-
-			KeyboardTypeSwitcher(keyboardType);
-		}
-
-		
-
 		static Keyboard()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(typeof(Keyboard)));
@@ -134,6 +105,26 @@ namespace KeyboardControl
 			);
 
 			Application.Current.Exit += OnExit;
+		}
+
+		public override void OnApplyTemplate()
+		{
+			GetCharPadList();
+			GetNumPadList();
+			CharPadType = GetTemplateChild("CharPadLayout") as ItemsControl;
+			NumPadType = GetTemplateChild("NumPadLayout") as ItemsControl;
+		}
+
+
+		internal void GetFocus(object sender, RoutedEventArgs e)
+		{
+
+			if (sender is TextBox)
+			{
+				keyboardType = GetKeyboardType(sender as DependencyObject);
+			}
+
+			KeyboardTypeSwitcher(keyboardType);
 		}
 
 		public void KeyboardTypeSwitcher(KeyBoardType KeyboardTypeProperty)
@@ -158,16 +149,6 @@ namespace KeyboardControl
 		}
 
 
-		public override void OnApplyTemplate()
-		{
-			//BackendGrid = GetTemplateChild("NumPadGrid") as Grid;
-			//GridGenerate();
-			GetCharPadList();
-			GetNumPadList();
-			CharPadType = GetTemplateChild("CharPadLayout") as ItemsControl;
-			NumPadType = GetTemplateChild("NumPadLayout") as ItemsControl;
-		}
-
 		public void GetCharPadList()
 		{
 			foreach (KeyData keyData in CharPad)
@@ -185,7 +166,6 @@ namespace KeyboardControl
 
 					SetKeyMetadata(button, keyData);
 					CharPadKeys.Add(button);
-					//button.Click += this.Shift_Click;
 					button.Checked += ShiftChecked;
 					button.Unchecked += ShiftUnchecked;
 				}
@@ -256,9 +236,6 @@ namespace KeyboardControl
 			foreach (var key in charPadKeys)
 			{
 				ButtonBase but = key as ButtonBase;
-				//but.Content = Keyboard.GetKeyMetadata(key).VKCode.ToString().ToUpper();
-				////but.Content = ToUnicodeConverter.GetKeyUIName(Keyboard.GetKeyMetadata(key).VKCode).ToUpper();
-				//but.Content = ToUnicodeConverter.GetKeyUIName((VirtualKeyCode)but.Name.To).ToUpper();
 
 				switch (but.Content)
 				{
@@ -276,8 +253,6 @@ namespace KeyboardControl
 						break;
 				}
 			}
-
-			//InvalidateVisual();
 		}
 
 		private void ShiftUnchecked(object sender, RoutedEventArgs e)
@@ -295,8 +270,6 @@ namespace KeyboardControl
 			{
 				ButtonBase but = key as ButtonBase;
 
-				//ButtonBase but = key as ButtonBase;
-				//but.Content = but.Content.ToString().ToUpper();
 				switch (but.Content)
 				{
 					case "BS":
@@ -317,7 +290,6 @@ namespace KeyboardControl
 
 		public virtual void OnExit(object sender, ExitEventArgs args)
 		{
-			//byte[] buffer = new byte[255];
 			short state = PInvokeMethods.GetAsyncKeyState((ushort)VirtualKeyCode.LSHIFT);
 
 			if (state != 0)

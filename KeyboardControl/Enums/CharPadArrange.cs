@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KeyboardControl.Enums
+﻿namespace KeyboardControl.Enums
 {
 	public enum CharPadArrange
 	{
@@ -206,7 +200,7 @@ namespace KeyboardControl.Enums
 		/// </summary>
 		OEM_2,
 
-		EN,
+		EN, // Language Switcher
 
 
 		// Row 3

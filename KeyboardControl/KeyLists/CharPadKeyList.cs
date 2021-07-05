@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using KeyboardControl.Enums;
 using KeyboardControl.Metadata;
 using KeyboardControl.Utils;
@@ -12,7 +9,6 @@ namespace KeyboardControl.KeyLists
 	class CharPadKeyList
 	{
 		public List<KeyData> charPad = new List<KeyData>();
-		//public List<UIElement> charPadKeys = new List<UIElement>();
 
 		string enumKeyName;
 		VirtualKeyCode keyCodeValue;
@@ -81,15 +77,11 @@ namespace KeyboardControl.KeyLists
 						name = ">";
 						break;
 				}
+
 				charPad.Add(new KeyData(name, keyCodeValue, rowPosition, widthCoefficient));
-				//widthCoefficient = 1;
-
-
 			}
 
 			return charPad;
 		}
-
-
 	}
 }

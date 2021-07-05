@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KeyboardControl.Enums
+﻿namespace KeyboardControl.Enums
 {
 	public enum NumPadArrange
 	{
+        // Row 0
+
         /// <summary>
         /// Numeric keypad 7 key
         /// </summary>
@@ -22,6 +18,8 @@ namespace KeyboardControl.Enums
         /// Numeric keypad 9 key
         /// </summary>
         NUMPAD9 = 2,
+
+        // Row 1
 
         /// <summary>
         /// Numeric keypad 4 key
@@ -38,6 +36,8 @@ namespace KeyboardControl.Enums
         /// </summary>
         NUMPAD6 = 5,
 
+        // Row 2
+
         /// <summary>
         /// Numeric keypad 1 key
         /// </summary>
@@ -52,6 +52,8 @@ namespace KeyboardControl.Enums
         /// Numeric keypad 3 key
         /// </summary>
         NUMPAD3 = 8,
+
+        // Row 3
 
         /// <summary>
         /// Numeric keypad 0 key
